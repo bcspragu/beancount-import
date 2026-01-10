@@ -1,5 +1,5 @@
 """This module implements a Source Subclass for wrapping
-`beangulp.importer.ImporterProtocol` subclasses importers.
+`beangulp.importer.Importer` or `beangulp.importer.ImporterProtocol` importers.
 The importers are considered athoritative of the account they represent.
 
 The Transaction.narration set by each importer is copied to Posting.meta[source_desc]
@@ -16,12 +16,12 @@ import os
 from glob import glob
 from collections import OrderedDict
 import itertools
-from typing import Hashable, List, Dict, Optional
+from typing import Hashable, List, Dict, Optional, Union
 
 from beancount.core.data import Balance, Transaction, Posting,  Directive
 from beancount.core.amount import Amount
 from beancount.core.convert import get_weight
-from beangulp.importer import ImporterProtocol
+from beangulp.importer import Importer, ImporterProtocol, Adapter
 from beangulp.cache import get_file
 from beancount.parser.booking_full import convert_costspec_to_cost
 
@@ -36,32 +36,35 @@ class ImporterSource(DescriptionBasedSource):
     def __init__(self,
                  directory: str,
                  account: str,
-                 importer: ImporterProtocol,
+                 importer: Union[Importer, ImporterProtocol],
                  **kwargs) -> None:
         super().__init__(**kwargs)
         self.directory = os.path.expanduser(directory)
-        self.importer = importer
+        # Wrap legacy ImporterProtocol with Adapter to use Importer interface
+        if isinstance(importer, Importer):
+            self.importer = importer
+        else:
+            self.importer = Adapter(importer)
         self.account = account
 
-        # get _FileMemo object for each file
-        files = [get_file(os.path.abspath(f)) for f in
-                    filter(os.path.isfile,
-                 glob(os.path.join(directory, '**', '*'), recursive=True)
-                           )
-        ]
+        # get all files in directory
+        all_files = [os.path.abspath(f) for f in
+                     filter(os.path.isfile,
+                            glob(os.path.join(directory, '**', '*'), recursive=True))]
+
         # filter the valid files for this importer
-        self.files = [f for f in files if self.importer.identify(f)]
+        self.files = [f for f in all_files if self.importer.identify(f)]
 
     @property
     def name(self) -> str:
-        return self.importer.name()
+        return self.importer.name
 
     def prepare(self, journal: 'JournalEditor', results: SourceResults) -> None:
         results.add_account(self.account)
 
         entries = OrderedDict() #type: Dict[Hashable, List[Directive]]
         for f in self.files:
-            f_entries = self.importer.extract(f, existing_entries=journal.entries)
+            f_entries = self.importer.extract(f, journal.entries)
             # collect  all entries in current statement, grouped by hash
             hashed_entries = OrderedDict() #type: Dict[Hashable, Directive]
             for entry in f_entries:
