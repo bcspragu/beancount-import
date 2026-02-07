@@ -18,7 +18,7 @@ from collections import OrderedDict
 import itertools
 from typing import Hashable, Optional, Union
 
-from beancount.core.data import Balance, Transaction, Posting,  Directive
+from beancount.core.data import Balance, Transaction, Posting, Directive
 from beancount.core.amount import Amount
 from beancount.core.convert import get_weight
 from beangulp.importer import Importer, ImporterProtocol, Adapter
@@ -28,16 +28,21 @@ from beancount.parser.booking_full import convert_costspec_to_cost
 from ..matching import FIXME_ACCOUNT, SimpleInventory
 from . import ImportResult, SourceResults
 from ..journal_editor import JournalEditor
-from .description_based_source import DescriptionBasedSource, get_pending_and_invalid_entries
+from .description_based_source import (
+    DescriptionBasedSource,
+    get_pending_and_invalid_entries,
+)
 from .mint import _get_key_from_posting
 
 
 class ImporterSource(DescriptionBasedSource):
-    def __init__(self,
-                 directory: str,
-                 account: str,
-                 importer: Union[Importer, ImporterProtocol],
-                 **kwargs) -> None:
+    def __init__(
+        self,
+        directory: str,
+        accounts: list[str],
+        importer: Union[Importer, ImporterProtocol],
+        **kwargs,
+    ) -> None:
         super().__init__(**kwargs)
         self.directory = os.path.expanduser(directory)
         # Wrap legacy ImporterProtocol with Adapter to use Importer interface
@@ -45,12 +50,15 @@ class ImporterSource(DescriptionBasedSource):
             self.importer = importer
         else:
             self.importer = Adapter(importer)
-        self.account = account
+        self.accounts = accounts
 
         # get all files in directory
-        all_files = [os.path.abspath(f) for f in
-                     filter(os.path.isfile,
-                            glob(os.path.join(directory, '**', '*'), recursive=True))]
+        all_files = [
+            os.path.abspath(f)
+            for f in filter(
+                os.path.isfile, glob(os.path.join(directory, "**", "*"), recursive=True)
+            )
+        ]
 
         # filter the valid files for this importer
         self.files = [f for f in all_files if self.importer.identify(f)]
@@ -59,14 +67,15 @@ class ImporterSource(DescriptionBasedSource):
     def name(self) -> str:
         return self.importer.name
 
-    def prepare(self, journal: 'JournalEditor', results: SourceResults) -> None:
-        results.add_account(self.account)
+    def prepare(self, journal: "JournalEditor", results: SourceResults) -> None:
+        for account in self.accounts:
+            results.add_account(account)
 
-        entries = OrderedDict() #type: Dict[Hashable, List[Directive]]
+        entries = OrderedDict()  # type: dict[Hashable, list[Directive]]
         for f in self.files:
             f_entries = self.importer.extract(f, journal.entries)
             # collect  all entries in current statement, grouped by hash
-            hashed_entries = OrderedDict() #type: Dict[Hashable, Directive]
+            hashed_entries = OrderedDict()  # type: dict[Hashable, Directive]
             for entry in f_entries:
                 key_ = self._get_key_from_imported_entry(entry)
                 self._add_description(entry)
@@ -83,18 +92,21 @@ class ImporterSource(DescriptionBasedSource):
         get_pending_and_invalid_entries(
             raw_entries=list(itertools.chain.from_iterable(entries.values())),
             journal_entries=journal.all_entries,
-            account_set=set([self.account]),
+            account_set=set(self.accounts),
             get_key_from_posting=_get_key_from_posting,
             get_key_from_raw_entry=self._get_key_from_imported_entry,
             make_import_result=self._make_import_result,
-            results=results)
+            results=results,
+        )
 
     def _add_description(self, entry: Transaction):
-        if not isinstance(entry, Transaction): return None
-        postings = entry.postings #type: List[Posting]
+        if not isinstance(entry, Transaction):
+            return None
+        postings = entry.postings  # type: list[Posting]
         to_mutate = []
         for i, posting in enumerate(postings):
-            if posting.account != self.account: continue
+            if posting.account not in self.accounts:
+                continue
             if isinstance(posting.meta, dict):
                 posting.meta["source_desc"] = entry.narration
                 posting.meta["date"] = entry.date
@@ -104,36 +116,58 @@ class ImporterSource(DescriptionBasedSource):
                 break
         for i in to_mutate:
             p = postings.pop(i)
-            p = Posting(p.account, p.units, p.cost, p.price, p.flag,
-                        {"source_desc":entry.narration, "date": entry.date})
+            p = Posting(
+                p.account,
+                p.units,
+                p.cost,
+                p.price,
+                p.flag,
+                {"source_desc": entry.narration, "date": entry.date},
+            )
             postings.insert(i, p)
 
-    def _get_source_posting(self, entry:Transaction) -> Optional[Posting]:
-        for posting in entry.postings:
-            if posting.account == self.account:
-                return posting
+    def _get_source_posting(self, entry: Transaction) -> Optional[Posting]:
+        for target_account in self.accounts:
+            for posting in entry.postings:
+                # We iterate through accounts first as we want to prioritize
+                # the earlier accounts and match those postings first, in the event that multiple
+                # match
+                if posting.account == target_account:
+                    return posting
         return None
 
-    def _get_key_from_imported_entry(self, entry:Directive) -> Hashable:
+    def _get_key_from_imported_entry(self, entry: Directive) -> Hashable:
         if isinstance(entry, Balance):
             return (entry.account, entry.date, entry.amount)
         if not isinstance(entry, Transaction):
-            raise ValueError("currently, ImporterSource only supports Transaction and Balance Directive. Got entry {}".format(entry))
+            raise ValueError(
+                "currently, ImporterSource only supports Transaction and Balance Directive. Got entry {}".format(
+                    entry
+                )
+            )
         source_posting = self._get_source_posting(entry)
         if source_posting is None:
-            raise ValueError("entry {} has no postings for account: {}".format(entry, self.account))
-        return (self.account,
-                entry.date,
-                source_posting.units,
-                entry.narration)
+            raise ValueError(
+                "entry {} has no postings for accounts: {}".format(entry, self.accounts)
+            )
+        return (
+            source_posting.account,
+            entry.date,
+            source_posting.units,
+            entry.narration,
+        )
 
-    def _make_import_result(self, imported_entry:Directive):
-        if isinstance(imported_entry, Transaction): balance_amounts(imported_entry)
+    def _make_import_result(self, imported_entry: Directive):
+        if isinstance(imported_entry, Transaction):
+            balance_amounts(imported_entry)
         result = ImportResult(
-            date=imported_entry.date, info=get_info(imported_entry), entries=[imported_entry])
+            date=imported_entry.date,
+            info=get_info(imported_entry),
+            entries=[imported_entry],
+        )
         # delete filename since it is used by beancount-import to determine if the
         # entry is from journal.
-        imported_entry.meta.pop('filename')
+        imported_entry.meta.pop("filename")
         return result
 
 
@@ -141,14 +175,15 @@ def get_info(raw_entry: Directive) -> dict:
     if raw_entry.meta["filename"].endswith(".beancount"):
         ftype = "text/plain"
     else:
-        ftype = get_file(raw_entry.meta['filename']).mimetype()
+        ftype = get_file(raw_entry.meta["filename"]).mimetype()
     return dict(
         type=ftype,
-        filename=raw_entry.meta['filename'],
-        line=raw_entry.meta['lineno'],
+        filename=raw_entry.meta["filename"],
+        line=raw_entry.meta["lineno"],
     )
 
-def balance_amounts(txn:Transaction)-> None:
+
+def balance_amounts(txn: Transaction) -> None:
     """Add FIXME account for the remaing amount to balance accounts"""
     inventory = SimpleInventory()
     for posting in txn.postings:
@@ -162,7 +197,8 @@ def balance_amounts(txn:Transaction)-> None:
                 price=None,
                 flag=None,
                 meta={},
-            ))
+            )
+        )
 
 
 def load(spec, log_status):
