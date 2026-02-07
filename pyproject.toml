@@ -4,3 +4,7 @@ requires = [
     "wheel",
     "setuptools_scm>=5.0.2",
 ]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
