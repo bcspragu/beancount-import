@@ -264,13 +264,13 @@ are not accounted for in your journal.
 """
 
 import collections
-from typing import Dict, List, Tuple, Optional, Union
+from typing import Dict, List, Optional
 import os
 import sys
 import pickle
 import logging
 
-from beancount.core.data import Transaction, Posting, Balance, Commodity, Price, EMPTY_SET, Directive
+from beancount.core.data import Transaction, Posting, EMPTY_SET, Directive
 from beancount.core.amount import Amount
 from beancount.core.flags import FLAG_OKAY
 from beancount.core.number import ZERO, ONE
@@ -279,7 +279,7 @@ import beancount.core.amount
 from .amazon_invoice import LOCALES, parse_invoice, DigitalItem, Order
 
 from ..matching import FIXME_ACCOUNT, SimpleInventory
-from ..posting_date import POSTING_DATE_KEY, POSTING_TRANSACTION_DATE_KEY
+from ..posting_date import POSTING_TRANSACTION_DATE_KEY
 from . import ImportResult, Source, SourceResults, InvalidSourceReference, AssociatedData
 from ..journal_editor import JournalEditor
 

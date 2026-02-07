@@ -55,10 +55,10 @@ from beancount_import.api_proxies.beautifulsoup import require_find, require_fin
 import dateutil.parser
 import beancount.core.amount
 from beancount.core.amount import Amount
-from beancount.core.number import D, ZERO
+from beancount.core.number import D
 from decimal import Decimal
 
-from ..amount_parsing import parse_amount, parse_number
+from ..amount_parsing import parse_amount
 
 logger = logging.getLogger('amazon_invoice')
 
@@ -471,7 +471,7 @@ def parse_shipments(soup, locale=Locale_en_US) -> List[Shipment]:
 
     header_tables = soup.find_all(is_shipment_header_table)
 
-    if header_tables is []:
+    if header_tables == []:
         # no shipment tables
         # e.g. if only gift cards in order
         logger.debug('no shipment table found')
@@ -591,7 +591,7 @@ def parse_gift_cards(soup, locale=Locale_en_US) -> List[Shipment]:
 
     header_tables = soup.find_all(is_gift_card_header_table)
 
-    if header_tables is []:
+    if header_tables == []:
         # if no gift cards in order
         logger.debug('no gift card table found')
         return []

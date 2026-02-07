@@ -1,8 +1,8 @@
 """Facilities for reversing the booking process to recover the original posting."""
 
-from typing import Iterable, List, Optional
-from beancount.core.data import Posting, CostSpec, Meta, Amount
-from beancount.core.number import ZERO, MISSING
+from typing import Iterable, List
+from beancount.core.data import Posting, CostSpec, Amount
+from beancount.core.number import ZERO
 
 def group_postings_by_meta(postings: Iterable[Posting]) -> Iterable[List[Posting]]:
     """Groups postings that have identical, non-None meta values together OR where

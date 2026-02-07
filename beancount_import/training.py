@@ -3,9 +3,9 @@ import datetime
 import functools
 import itertools
 import re
-from typing import Callable, Any, Dict, Iterable, List, NamedTuple, Sequence, Union, Optional, Tuple, Set
+from typing import Callable, Any, Dict, Iterable, List, NamedTuple, Sequence, Union, Optional, Set
 
-from beancount.core.data import Directive, Entries, Transaction, Posting
+from beancount.core.data import Entries, Transaction, Posting
 from beancount.core.amount import Amount
 from .matching import is_unknown_account, FIXME_ACCOUNT
 from .posting_date import get_posting_date

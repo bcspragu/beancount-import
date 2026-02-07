@@ -1,12 +1,11 @@
 """Parses a Google employee PDF pay statement from Ultipro."""
 import os
-from typing import NamedTuple, Dict, Any, List, Optional, Tuple, Union, Callable, Match
+from typing import NamedTuple, Dict, Any, List, Optional, Tuple
 import datetime
 import collections
 import re
 import subprocess
 from beancount.core.number import D, ZERO, Decimal
-from beancount.core.data import Amount
 
 ParsedValues = List[Tuple[str, Dict[str, Any]]]
 

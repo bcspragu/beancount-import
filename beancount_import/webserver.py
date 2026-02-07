@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-from typing import Tuple, Optional, List, Dict, Any
+from typing import Tuple, Optional, List, Any
 import argparse
 import binascii
 import datetime
 import time
 import io
-import collections
 import sys
 import logging
 import traceback
@@ -14,7 +13,6 @@ import pdb
 import pkg_resources
 import json
 import os
-import tempfile
 import webbrowser
 
 import atomicwrites
@@ -25,7 +23,7 @@ import tornado.netutil
 import tornado.websocket
 
 from beancount.core.data import Transaction, Posting
-from beancount.core.number import MISSING, Decimal, D
+from beancount.core.number import Decimal, D
 import beancount.parser.printer
 
 import watchdog.events
@@ -34,7 +32,6 @@ import watchdog.observers
 from . import reconcile
 
 from . import training
-from . import matching
 from .source import Source, InvalidSourceReference
 
 

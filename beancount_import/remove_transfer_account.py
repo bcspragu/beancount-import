@@ -1,12 +1,11 @@
 """Interactive tool for removing an account that was used for pending transfers."""
 
-from typing import List, Set, Tuple, NamedTuple, Union, Dict
+from typing import NamedTuple
 import argparse
 import datetime
 
-from beancount.core.data import Transaction, Posting, Directive, Entries
+from beancount.core.data import Transaction, Posting, Directive
 from beancount.core.number import MISSING, ZERO
-from beancount.core.amount import Amount
 import beancount.parser.printer
 
 from . import journal_editor

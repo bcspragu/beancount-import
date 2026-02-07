@@ -137,8 +137,8 @@ import datetime
 import os
 import re
 from beancount.core.amount import Amount
-from beancount.core.data import Transaction, Posting, Balance, Commodity, Price, EMPTY_SET, Open, Meta
-from beancount.core.number import D, MISSING, ZERO
+from beancount.core.data import Transaction, Posting, Balance, Price, EMPTY_SET, Open
+from beancount.core.number import MISSING, ZERO
 from beancount.core.flags import FLAG_OKAY
 from beancount.core.position import Cost, CostSpec
 

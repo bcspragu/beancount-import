@@ -2,10 +2,7 @@
 
 import decimal
 import os
-import unittest
 
-import beancount.parser.parser
-import beancount.parser.printer
 from . import matching
 from . import test_util
 

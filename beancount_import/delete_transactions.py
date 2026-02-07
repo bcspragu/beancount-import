@@ -5,12 +5,10 @@ import sys
 
 from beancount.query import (query_compile, query_env, query_execute, query_parser)
 from beancount.core import inventory
-from beancount.core.data import Transaction
 from beancount.parser import options
 from beancount.core import getters
 from beancount.ops import prices
 from . import journal_editor
-import pdb
 
 
 def get_matching_entries(entries, options_map, query):

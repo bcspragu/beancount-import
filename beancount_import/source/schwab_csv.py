@@ -1333,7 +1333,7 @@ class SchwabSource(DescriptionBasedSource):
     ) -> Optional[PostingKey]:
         if posting.meta is None:
             return None
-        if not posting.account in account_set:
+        if posting.account not in account_set:
             return None
         source_desc = cast(str, posting.meta.get(SOURCE_DESC_KEYS[0], ""))
         if not source_desc:

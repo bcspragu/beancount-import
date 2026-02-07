@@ -55,7 +55,7 @@ statements.
 
 """
 
-from typing import Dict, List, Any, Optional, Iterable
+from typing import List, Any, Optional, Iterable
 import datetime
 import os
 import collections
@@ -63,10 +63,10 @@ import json
 
 import jsonschema
 from beancount.core.number import D, ZERO
-from beancount.core.data import Open, Transaction, Posting, Amount, Pad, Balance, Entries, Directive
+from beancount.core.data import Transaction, Posting, Amount
 import dateutil.parser
 
-from . import ImportResult, SourceResults, Source, InvalidSourceReference, AssociatedData
+from . import ImportResult, SourceResults, Source, AssociatedData
 from ..matching import FIXME_ACCOUNT
 
 from .link_based_source import LinkBasedSource

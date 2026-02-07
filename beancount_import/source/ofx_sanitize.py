@@ -9,7 +9,7 @@ not perfect and the result may need to be edited manually.
 
 """
 
-from typing import FrozenSet, Set, List, Callable, Dict
+from typing import FrozenSet, List, Callable
 import random
 import re
 import io

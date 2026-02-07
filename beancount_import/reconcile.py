@@ -1,7 +1,7 @@
 import collections
 import datetime
 import re
-from typing import List, Optional, Union, Callable, Dict, Mapping, Tuple, Any, Iterable, Set, NamedTuple
+from typing import List, Optional, Union, Callable, Dict, Mapping, Tuple, Any, Iterable, NamedTuple
 import argparse
 import os
 import tempfile
@@ -10,7 +10,7 @@ import string
 import random
 import pickle
 
-from beancount.core.data import Transaction, Posting, Balance, Open, Close, Price, Directive, Entries, Amount
+from beancount.core.data import Transaction, Posting, Balance, Open, Close, Price, Directive, Entries
 from beancount.core.flags import FLAG_PADDING
 from beancount.core.number import MISSING, Decimal, ZERO
 import beancount.parser.printer
@@ -18,7 +18,7 @@ import beancount.parser.printer
 from . import training
 from . import matching
 from . import journal_editor
-from .source import ImportResult, load_source, SourceResults, Source, LogFunction, AssociatedData, InvalidSourceReference, invalid_source_reference_sort_key
+from .source import ImportResult, load_source, SourceResults, Source, LogFunction, invalid_source_reference_sort_key
 from .posting_date import get_posting_date
 
 from .thread_helpers import call_in_new_thread

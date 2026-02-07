@@ -1,9 +1,9 @@
 """Base class for sources with a transaction link that specifies a unique id."""
 
-from typing import Dict, List, Any, Optional, FrozenSet, Union, Set
+from typing import Dict, List, Optional, FrozenSet, Union, Set
 
-from beancount.core.data import Open, Transaction, Posting, Amount, Pad, Balance, Entries, Directive
-from . import ImportResult, SourceResults, Source, InvalidSourceReference, AssociatedData
+from beancount.core.data import Transaction, Entries, Directive
+from . import SourceResults, InvalidSourceReference, AssociatedData
 
 
 class LinkBasedSource:

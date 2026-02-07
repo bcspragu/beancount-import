@@ -9,7 +9,6 @@ from beancount.core.data import Transaction
 from beancount.parser import options
 from beancount.core import (getters, prices)
 from . import journal_editor
-import pdb
 
 
 def get_matching_postings(entries, options_map, query):

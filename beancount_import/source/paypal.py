@@ -116,7 +116,7 @@ Sending money with credit card:
 
 
 """
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Optional, Any
 
 import collections
 import datetime
@@ -128,13 +128,11 @@ from abc import ABC, abstractmethod
 import jsonschema
 import dateutil.parser
 
-from beancount.core.data import Transaction, Posting, Balance, Commodity, Price, EMPTY_SET, Directive, Entries, Meta
+from beancount.core.data import Transaction, Posting, EMPTY_SET
 from beancount.core.amount import Amount
-from beancount.core.flags import FLAG_OKAY
-from beancount.core.number import ZERO, ONE, D
-import beancount.core.amount
+from beancount.core.number import ZERO, D
 
-from . import ImportResult, Source, SourceResults, InvalidSourceReference, AssociatedData
+from . import ImportResult, Source, SourceResults, AssociatedData
 from .link_based_source import LinkBasedSource
 from ..posting_date import POSTING_DATE_KEY
 from ..journal_editor import JournalEditor

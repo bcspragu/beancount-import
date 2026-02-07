@@ -10,7 +10,7 @@ import dateutil.parser
 from beancount.core.amount import abs as amount_abs
 from beancount.core.amount import div as amount_div
 from beancount.core.amount import Amount
-from beancount.core.number import D, ZERO, Decimal
+from beancount.core.number import D, Decimal
 from ..amount_parsing import parse_amount
 
 

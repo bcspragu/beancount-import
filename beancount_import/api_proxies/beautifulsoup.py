@@ -1,6 +1,6 @@
-from bs4.element import Tag, PageElement, _FindMethodName, NavigableString
+from bs4.element import Tag, PageElement, _FindMethodName
 
-from typing import Optional, Any, Union, cast, Pattern, Callable, Iterable
+from typing import Optional, cast
 from bs4._typing import (
     _OneElement,
     _StrainableAttribute,

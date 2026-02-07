@@ -6,9 +6,7 @@ import io
 import os
 import json
 
-import beancount.parser.parser
-import beancount.parser.printer
-from beancount.core.data import Posting, Transaction, Meta, Directive, Entries
+from beancount.core.data import Posting, Transaction, Directive
 
 from ..journal_editor import JournalEditor
 from . import load_source as _load_source, ImportResult, SourceResults, SourceSpec, InvalidSourceReference, PredictionInput, Source, invalid_source_reference_sort_key

@@ -1,10 +1,8 @@
 import datetime
 
-import beancount.parser.printer
 from beancount.core.data import Transaction, Posting, EMPTY_SET
 from beancount.core.number import MISSING, Decimal
 from beancount.core.amount import Amount
-import pytest
 import py
 
 from . import journal_editor

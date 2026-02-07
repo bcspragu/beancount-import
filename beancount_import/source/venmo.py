@@ -118,12 +118,12 @@ import os
 import collections
 import csv
 import re
-from typing import Dict, Tuple, List, Union, Sequence
+from typing import Dict, List, Union
 
 import dateutil.parser
 from beancount.core.data import Transaction, Posting, Balance, EMPTY_SET, Open
 from beancount.core.flags import FLAG_OKAY
-from beancount.core.number import MISSING, D, ZERO
+from beancount.core.number import ZERO
 
 from .. import amount_parsing
 from . import ImportResult, Source, SourceResults, InvalidSourceReference

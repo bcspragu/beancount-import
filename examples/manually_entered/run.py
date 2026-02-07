@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-import glob
 import os
-import json
 import sys
 
 from _config import my_foobar_bank_importer, my_amex_cc_importer

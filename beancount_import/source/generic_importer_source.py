@@ -16,7 +16,7 @@ import os
 from glob import glob
 from collections import OrderedDict
 import itertools
-from typing import Hashable, List, Dict, Optional, Union
+from typing import Hashable, Optional, Union
 
 from beancount.core.data import Balance, Transaction, Posting,  Directive
 from beancount.core.amount import Amount
@@ -74,7 +74,7 @@ class ImporterSource(DescriptionBasedSource):
             # deduplicate across statements
             for key_ in hashed_entries:
                 # skip the existing entries from other statements. add remaining
-                if not key_ in entries:
+                if key_ not in entries:
                     n = 0
                 else:
                     n = len(entries[key_])

@@ -2,7 +2,7 @@ import argparse
 import beancount.loader
 import dateutil.parser
 from beancount.core.number import D
-from beancount.core.data import Open, Transaction, Balance, Commodity
+from beancount.core.data import Transaction
 from beancount.core.inventory import Inventory
 from beancount.core.position import get_position, Position, Cost
 from beancount.core.convert import get_units, get_cost

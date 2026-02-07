@@ -50,16 +50,14 @@ breakdown as well, it works better to leave `tax_accounts` unspecified.
 
 """
 
-from typing import Union, Optional, List, Set, Dict, Tuple, Any
-import datetime
+from typing import Union, Optional, List, Dict
 import os
-import re
 import collections
 
-from beancount.core.data import Open, Transaction, Posting, Amount, Pad, Balance, Directive, EMPTY_SET, Entries
+from beancount.core.data import Transaction, Posting, Amount, Directive, EMPTY_SET, Entries
 from beancount.core.amount import sub as amount_sub
 from beancount.core.position import CostSpec
-from beancount.core.number import D, ZERO
+from beancount.core.number import ZERO
 from beancount.core.number import MISSING
 from beancount_import.posting_date import POSTING_DATE_KEY
 from beancount_import.amount_parsing import parse_amount

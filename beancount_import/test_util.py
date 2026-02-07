@@ -1,10 +1,8 @@
-from typing import List, Optional, Union, Tuple, Dict
+from typing import List, Optional, Union, Tuple
 import json
 import re
 import os
 
-import pytest
-import py
 
 import beancount.parser.parser
 import beancount.parser.printer

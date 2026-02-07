@@ -95,14 +95,14 @@ related to restricted stock units).
 
 """
 
-from typing import List, Optional, Tuple, Dict, Set
+from typing import List, Optional, Tuple, Dict
 import datetime
 import os
 import collections
 import functools
 import re
-from beancount.core.number import D, ZERO
-from beancount.core.data import Open, Transaction, Posting, Amount, Entries, Directive, EMPTY_SET
+from beancount.core.number import ZERO
+from beancount.core.data import Transaction, Posting, Amount, Entries, Directive, EMPTY_SET
 from . import ImportResult, SourceResults, Source, AssociatedData, InvalidSourceReference
 from ..matching import FIXME_ACCOUNT
 from . import ultipro_google_statement

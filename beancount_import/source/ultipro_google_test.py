@@ -4,7 +4,6 @@ import sys
 
 import pytest
 
-from . import ultipro_google
 from .source_test import check_source_example
 
 testdata_dir = os.path.realpath(

@@ -139,7 +139,7 @@ duplicate, there are two ways you can deal with this:
    excludes transactions that have been marked as duplicates.
 """
 
-from typing import List, Union, Optional, Set
+from typing import List, Union, Optional
 import csv
 import datetime
 import collections
@@ -149,7 +149,7 @@ import os
 from beancount.core.data import Transaction, Posting, Balance, EMPTY_SET
 from beancount.core.amount import Amount
 from beancount.core.flags import FLAG_OKAY
-from beancount.core.number import MISSING, D, ZERO
+from beancount.core.number import D, ZERO
 
 from . import description_based_source
 from . import ImportResult, SourceResults

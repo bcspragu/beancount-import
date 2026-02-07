@@ -415,11 +415,10 @@ of the manually created postings, as shown below:
 
 import pickle
 import re
-from typing import Set, Tuple, Any, Dict, Union, List, Optional, NamedTuple
+from typing import Tuple, Any, Dict, Union, List, Optional, NamedTuple
 import os
 import collections
 import datetime
-import tempfile
 
 import bs4
 from atomicwrites import atomic_write
